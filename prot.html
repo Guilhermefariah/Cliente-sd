@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Favorites</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .edit-button {
+            background-color: #4CAF50; /* Green */
+        }
+        .delete-button {
+            background-color: #f44336; /* Red */
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: calc(100% - 22px); /* Adjust width to fit padding and border */
+        }
+        button[type="submit"] {
+            background-color: #007bff; /* Blue */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* Darker Blue */
+        }
+    </style>
+</head>
+<body>
+    <h1>Anime Favorites</h1>
+
+    <div class="form-container">
+        <form id="anime-form">
+            <input type="text" id="anime-name" placeholder="Add a new anime" required>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Episode</th>
+                <th>Likes</th>
+                <th>Start Time</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="anime-list"></tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        const apiUrl = 'http://localhost:8080/json/scenes';
+
+        async function fetchAnimes() {
+            try {
+                const response = await axios.get(apiUrl);
+                const animes = response.data;
+
+                const list = document.getElementById('anime-list');
+                list.innerHTML = '';
+
+                animes.forEach(anime => {
+                    const tr = document.createElement('tr');
+
+                    tr.innerHTML = `
+                        <td>${anime.name}</td>
+                        <td>${anime.episode}</td>
+                        <td>${anime.likes}</td>
+                        <td>${anime.startTime}</td>
+                        <td>${anime.description}</td>
+                        <td>
+                            <button class="like-button" onclick="likeScene(${anime.id})">Like</button>
+                            <button class="delete-button" onclick="deleteAnime(${anime.id})">Delete</button>
+                        </td>
+                    `;
+
+                    list.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error fetching animes:', error);
+            }
+        }
+
+        async function addAnime(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('anime-name').value;
+            const newScene = {
+                name: name,
+                episode: "Unknown Episode",
+                likes: 0,
+                startTime: 0,
+                sceneImage: "",
+                description: "No description"
+            };
+
+            try {
+                await axios.post(`${apiUrl}/new`, newScene);
+                fetchAnimes(); // Atualize a lista de animes após adicionar
+            } catch (error) {
+                console.error('Error adding anime:', error);
+            }
+
+            document.getElementById('anime-form').reset();
+        }
+
+        async function deleteAnime(id) {
+            try {
+                await axios.delete(`${apiUrl}/remove/${id}`);
+                fetchAnimes(); // Atualize a lista de animes após deletar
+            } catch (error) {
+                console.error('Error deleting anime:', error);
+            }
+        }
+
+        async function likeScene(id) {
+            try {
+                await axios.put(`${apiUrl}/like/${id}`);
+                fetchAnimes(); // Atualize a lista de animes após editar
+            } catch (error) {
+                console.error('Error liking scene:', error);
+            }
+        }
+
+        document.getElementById('anime-form').addEventListener('submit', addAnime);
+
+        fetchAnimes(); // Fetch and display animes on page load
+    </script>
+</body>
+</html>

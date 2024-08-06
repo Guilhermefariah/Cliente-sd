@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Scenes</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-img-top {
+            height: 200px; /* Define a altura da imagem */
+            object-fit: cover; /* Faz com que a imagem se ajuste ao tamanho */
+        }
+        .scene-card {
+            margin-bottom: 20px; /* Espaço abaixo do cartão */
+        }
+        .container {
+            max-width: 1200px; /* Largura máxima do container */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h1 class="display-4">Anime Scenes</h1>
+            <p class="lead">Explore your favorite anime scenes!</p>
+        </div>
+        
+        <!-- Formulário de Cadastro -->
+        <div class="mb-4">
+            <h2 class="mb-3">Cadastrar Nova Cena</h2>
+            <form id="add-scene-form">
+                <div class="form-group">
+                    <label for="imgUrl">Image URL:</label>
+                    <input type="text" class="form-control" id="imgUrl" placeholder="Enter image URL" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" id="description" rows="3" placeholder="Enter description" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Scene</button>
+            </form>
+        </div>
+
+        <div id="scenes-container" class="row">
+            <!-- Conteúdo será inserido aqui pelo JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDescriptionModalLabel">Edit Description</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="newDescription" class="form-control" placeholder="Enter new description">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitDescription()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
